@@ -34,3 +34,10 @@ export function canLockRow (gamecard,color) {
         (row.includes(12) && (color ==='RED' || color === 'YELLOW') ||
         row.includes(2) && (color ==='BLUE' || color === 'GREEN'));
 }
+
+export function calculateTotalScore(gamecard) {
+    return calculateScore(gamecard['RED'].length) +
+        calculateScore(gamecard['YELLOW'].length) +
+        calculateScore(gamecard['BLUE'].length) +
+        calculateScore(gamecard['GREEN'].length);
+}
