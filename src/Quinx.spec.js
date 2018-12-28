@@ -1,4 +1,4 @@
-import {calculateScore, canLockRow, generateNumbers, isDisabled, isReversed} from './Quinx'
+import {calculateScore, canLockRow, generateNumbers, generatePossibleEntries, isDisabled, isReversed} from './Quinx'
 
 describe('Quinxx', () => {
     describe('disables values that are not permitted', () => {
@@ -57,5 +57,67 @@ describe('Quinxx', () => {
         expect(canLockRow({BLUE: [3, 4, 5, 6, 7], lockedRows: []}, 'BLUE')).toEqual(false);
         expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7], lockedRows: []}, 'BLUE')).toEqual(true);
         expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7], lockedRows: ['BLUE']}, 'BLUE')).toEqual(false);
+    });
+
+    describe('generates a list of available numbers to enter from a dice throw', () => {
+        it('checks if white dice can be entered', () => {
+            let diceRolls = {
+                WHITE1: 2,
+                WHITE2: 2,
+                RED: 2,
+                YELLOW: 2,
+                GREEN: 2,
+                BLUE: 2,
+            };
+            let gamecard = {
+                RED: [],
+                BLUE: [],
+                YELLOW: [],
+                GREEN: [],
+                lockedRows: []
+            };
+            let possibleEntries = {
+                RED: [4],
+                YELLOW: [4],
+                GREEN: [4],
+                BLUE: [4],
+            };
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+            gamecard.RED.push(4);
+            possibleEntries.RED = [];
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+            gamecard.YELLOW.push(5);
+            possibleEntries.YELLOW = [];
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+            gamecard.GREEN.push(5);
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+            gamecard.BLUE.push('locked');
+            possibleEntries.BLUE = [];
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+        });
+        it('checks if colored dice can be entered', () => {
+            let diceRolls = {
+                WHITE1: 2,
+                WHITE2: 3,
+                RED: 3,
+                YELLOW: 4,
+                GREEN: 5,
+                BLUE: 6,
+            };
+            let gamecard = {
+                RED: [],
+                BLUE: [],
+                YELLOW: [],
+                GREEN: [],
+                lockedRows: []
+            };
+            let possibleEntries = {
+                RED: [5, 6],
+                YELLOW: [5, 6, 7],
+                GREEN: [5, 7, 8],
+                BLUE: [5, 8, 9],
+            };
+            expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+        });
     });
 });

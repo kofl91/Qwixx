@@ -2,7 +2,7 @@ import React from 'react';
 import {Button} from 'react-bootstrap';
 import {isDisabled,isReversed} from "./Quinx";
 
-export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField}) => {
+export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField, possibleFromDiceThrow}) => {
     if (gamecard[color].includes(digit)) {
         return (
             <Button
@@ -35,7 +35,7 @@ export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField}) =
     return (
         <Button
             onClick={addToGamecard}
-            disabled={lastField && gamecard[color].length < 5}
+            disabled={(lastField && gamecard[color].length < 5) || !possibleFromDiceThrow[color].includes(digit)}
         >
             {digit}
         </Button>

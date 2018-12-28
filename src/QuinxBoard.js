@@ -1,14 +1,22 @@
 import React from 'react';
-import {calculateScore, calculateTotalScore, canLockRow, generateNumbers, isReversed} from "./Quinx";
+import {
+    calculateScore,
+    calculateTotalScore,
+    canLockRow,
+    generateNumbers,
+    generatePossibleEntries,
+    isReversed
+} from "./Quinx";
 import {Button, Table} from 'react-bootstrap';
 import {QuinxField} from "./QuinxField";
 
 export const QuinxBoard = (props) => {
+    const possibleEntries = generatePossibleEntries(props.diceRolls, props.gamecard);
     return (<Table striped bordered condensed hover>
         <thead>
-        <tr>
-            <th>Score</th>
-        </tr>
+            <tr>
+                <th>Score</th>
+            </tr>
         </thead>
         <tbody>
         {['RED', 'YELLOW', 'GREEN', 'BLUE'].map(color => (
@@ -24,8 +32,9 @@ export const QuinxBoard = (props) => {
                                     color={color}
                                     digit={digit}
                                     gamecard={props.gamecard}
+                                    possibleFromDiceThrow={possibleEntries}
                                     addToGamecard={props.addToGamecard(digit, color)}
-                                    lastField={index === 10 ? true : false}
+                                    lastField={index === 10}
                                 />
                             </td>);
                     }
