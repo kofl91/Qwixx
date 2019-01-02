@@ -50,13 +50,13 @@ describe('Quinxx', () => {
     });
 
     it('disables the lock button until the last entry is put in', () => {
-        expect(canLockRow({RED: [2, 3, 4, 5], lockedRows: []}, 'RED')).toEqual(false);
-        expect(canLockRow({RED: [2, 3, 4, 5, 6], lockedRows: []}, 'RED')).toEqual(false);
-        expect(canLockRow({RED: [2, 3, 4, 5, 6, 12], lockedRows: []}, 'RED')).toEqual(true);
-        expect(canLockRow({BLUE: [3, 4, 5, 6], lockedRows: []}, 'BLUE')).toEqual(false);
-        expect(canLockRow({BLUE: [3, 4, 5, 6, 7], lockedRows: []}, 'BLUE')).toEqual(false);
-        expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7], lockedRows: []}, 'BLUE')).toEqual(true);
-        expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7], lockedRows: ['BLUE']}, 'BLUE')).toEqual(false);
+        expect(canLockRow({RED: [2, 3, 4, 5]}, 'RED', [])).toEqual(false);
+        expect(canLockRow({RED: [2, 3, 4, 5, 6]}, 'RED', [])).toEqual(false);
+        expect(canLockRow({RED: [2, 3, 4, 5, 6, 12]}, 'RED', [])).toEqual(true);
+        expect(canLockRow({BLUE: [3, 4, 5, 6]}, 'BLUE', [])).toEqual(false);
+        expect(canLockRow({BLUE: [3, 4, 5, 6, 7]}, 'BLUE', [])).toEqual(false);
+        expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7]}, 'BLUE', [])).toEqual(true);
+        expect(canLockRow({BLUE: [2, 3, 4, 5, 6, 7]}, 'BLUE', ['BLUE'])).toEqual(false);
     });
 
     describe('generates a list of available numbers to enter from a dice throw', () => {

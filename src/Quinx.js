@@ -25,11 +25,11 @@ export function calculateScore(numberOfCrosses) {
     return score;
 }
 
-export function canLockRow(gamecard, color) {
+export function canLockRow(gamecard, color, lockedRows) {
     const row = gamecard[color];
     const length = row.length;
     return length >= 5 &&
-        !gamecard.lockedRows.includes(color) &&
+        !lockedRows.includes(color) &&
         (row.includes(12) && (color === 'RED' || color === 'YELLOW') ||
             row.includes(2) && (color === 'BLUE' || color === 'GREEN'));
 }

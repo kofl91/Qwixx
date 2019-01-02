@@ -41,6 +41,7 @@ const QuinxSheet = (props) => {
                                 possibleFromDiceThrow={props.possibleEntries}
                                 addToGamecard={props.addToGamecard(digit, color)}
                                 lastField={index === 10}
+                                lockedRows={props.lockedRows}
                             />
                         </td>);
                 }
@@ -48,7 +49,7 @@ const QuinxSheet = (props) => {
             <td>
                 <Button
                     bsStyle="danger"
-                    disabled={!canLockRow(props.gamecard, color)}
+                    disabled={!canLockRow(props.gamecard, color, props.lockedRows)}
                     onClick={props.lockRow(color)}
                 >
                     LOCK
@@ -82,13 +83,14 @@ const ScoreCard = (props) => {
     return (scoreCard);
 };
 
-export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow}) => {
+export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow, lockedRows}) => {
     const possibleEntries = generatePossibleEntries(diceRolls, gamecard);
     return (
         <Table striped bordered condensed hover>
             <tbody>
             <QuinxSheet
                 gamecard={gamecard}
+                lockedRows={lockedRows}
                 lockRow={lockRow}
                 addToGamecard={addToGamecard}
                 possibleEntries={possibleEntries}

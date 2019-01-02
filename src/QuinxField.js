@@ -1,8 +1,8 @@
 import React from 'react';
 import {Button} from 'react-bootstrap';
-import {isDisabled,isReversed} from "./Quinx";
+import {isDisabled, isReversed} from "./Quinx";
 
-export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField, possibleFromDiceThrow}) => {
+export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField, possibleFromDiceThrow, lockedRows}) => {
     if (gamecard[color].includes(digit)) {
         return (
             <Button
@@ -12,7 +12,7 @@ export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField, po
                         gamecard[color],
                         digit,
                         isReversed(color),
-                        gamecard.lockedRows.includes(color)
+                        lockedRows.includes(color)
                     )
                 }
                 onClick={() => {
@@ -21,7 +21,7 @@ export const QuinxField = ({color, digit, gamecard, addToGamecard, lastField, po
                 X
             </Button>
         );
-    } else if (isDisabled(gamecard[color], digit, isReversed(color), gamecard.lockedRows.includes(color))) {
+    } else if (isDisabled(gamecard[color], digit, isReversed(color), lockedRows.includes(color))) {
         return (
             <Button
                 disabled={true}
