@@ -34,11 +34,12 @@ export function canLockRow(gamecard, color) {
             row.includes(2) && (color === 'BLUE' || color === 'GREEN'));
 }
 
-export function calculateTotalScore(gamecard) {
+export function calculateTotalScore(gamecard, failthrows) {
     return calculateScore(gamecard['RED'].length) +
         calculateScore(gamecard['YELLOW'].length) +
         calculateScore(gamecard['BLUE'].length) +
-        calculateScore(gamecard['GREEN'].length);
+        calculateScore(gamecard['GREEN'].length) -
+        failthrows * 5;
 }
 
 let notYetIncluded = function (possibleResult, color, possibleWhite) {
@@ -65,13 +66,13 @@ export function generatePossibleEntries(diceRolls, gamecard) {
     const COLORS = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
     COLORS.forEach((color) => {
         allPossibleColor[color].forEach(possibleDigit => {
-        if (notYetIncluded(gamecard, color, possibleDigit) &&
-            notYetIncluded(possibleResult, color, possibleDigit) &&
-            !isDisabled(gamecard[color],possibleDigit,isReversed(color)) &&
-            !isLocked(gamecard[color])
-         ) {
-            possibleResult[color].push(possibleDigit);
-        }
+            if (notYetIncluded(gamecard, color, possibleDigit) &&
+                notYetIncluded(possibleResult, color, possibleDigit) &&
+                !isDisabled(gamecard[color], possibleDigit, isReversed(color)) &&
+                !isLocked(gamecard[color])
+            ) {
+                possibleResult[color].push(possibleDigit);
+            }
         });
     });
     return possibleResult;

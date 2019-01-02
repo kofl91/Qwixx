@@ -59,16 +59,27 @@ const QuinxSheet = (props) => {
 };
 
 const ScoreCard = (props) => {
-    let singleScores = ['RED', 'YELLOW', 'GREEN', 'BLUE'].map(color => {
+    let scoreCard = ['RED', 'YELLOW', 'GREEN', 'BLUE'].map(color => {
         return (<td key={color}>
             <input value={calculateScore(props.gamecard[color].length)} size={3}
                    disabled={true}/>
         </td>);
     });
-    singleScores.push(<td key={'totalscore'}>
-        {calculateTotalScore(props.gamecard)}
+    scoreCard.push(<td key={'negativeScore'}>
+        <input value={5 * props.failthrows * -1} size={3}
+               disabled={true}/>
     </td>);
-    return (singleScores);
+    scoreCard.push(<td key={'totalscore'}>
+        {calculateTotalScore(props.gamecard, props.failthrows)}
+    </td>);
+    scoreCard.push(<td key={'emptycoloum1'}/>);
+    scoreCard.push(<td key={'emptycoloum2'}/>);
+    scoreCard.push(<FailThrows key={'failthrows'}
+                               acceptFailthrow={props.acceptFailthrow}
+                               failthrows={props.failthrows}
+    />);
+
+    return (scoreCard);
 };
 
 export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow}) => {
@@ -85,13 +96,8 @@ export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamec
             <tr>
                 <ScoreCard
                     gamecard={gamecard}
-                />
-                <td/>
-                <td/>
-                <td/>
-                <FailThrows
-                    acceptFailthrow={acceptFailthrow}
                     failthrows={failthrows}
+                    acceptFailthrow={acceptFailthrow}
                 />
             </tr>
             </tbody>
