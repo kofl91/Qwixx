@@ -1,22 +1,9 @@
 import React, {Component} from 'react';
 import './App.css';
 import {QuinxBoard} from './QuinxBoard';
+import {DiceBoard, DICE_COLORS} from './DiceBoard';
 import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
-
-const DiceBoard = (props) => {
-    return (<div>
-        <button disabled style={{backgroundColor:'WHITE'}}>{props.white1}</button>
-        <button disabled style={{backgroundColor:'WHITE'}}>{props.white2}</button>
-        <button disabled style={{backgroundColor:'RED'}}>{props.red}</button>
-        <button disabled style={{backgroundColor:'YELLOW'}}>{props.yellow}</button>
-        <button disabled style={{backgroundColor:'GREEN', color:'WHITE'}}>{props.green}</button>
-        <button disabled style={{backgroundColor:'BLUE', color:'WHITE'}}>{props.blue}</button>
-    </div>)
-};
-
-const DICE_COLORS = ['WHITE1', 'WHITE2', 'RED', 'YELLOW', 'GREEN', 'BLUE'];
-
 
 class App extends Component {
     state = {
@@ -28,24 +15,22 @@ class App extends Component {
             lockedRows: []
         },
         diceRolls:{
-            WHITE1:1,
-            WHITE2:2,
-            RED:2,
-            YELLOW:2,
-            GREEN:2,
-            BLUE:2,
+            WHITE1:0,
+            WHITE2:0,
+            RED:0,
+            YELLOW:0,
+            GREEN:0,
+            BLUE:0,
         },
         failthrows: 0,
     };
 
     acceptFailthrow = (event) => {
         let failthrows = this.state.failthrows;
-        console.log(failthrows);
         failthrows = failthrows + 1;
         this.setState({
             failthrows
         });
-        console.log(failthrows);
     };
 
     addToGamecard = (digit, color) => (event) => {
