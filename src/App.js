@@ -17,6 +17,7 @@ const DiceBoard = (props) => {
 
 const DICE_COLORS = ['WHITE1', 'WHITE2', 'RED', 'YELLOW', 'GREEN', 'BLUE'];
 
+
 class App extends Component {
     state = {
         GAMECARD: {
@@ -34,6 +35,17 @@ class App extends Component {
             GREEN:2,
             BLUE:2,
         },
+        failthrows: 0,
+    };
+
+    acceptFailthrow = (event) => {
+        let failthrows = this.state.failthrows;
+        console.log(failthrows);
+        failthrows = failthrows + 1;
+        this.setState({
+            failthrows
+        });
+        console.log(failthrows);
     };
 
     addToGamecard = (digit, color) => (event) => {
@@ -42,6 +54,16 @@ class App extends Component {
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
         this.setState({
             GAMECARD: gamecard
+        });
+    };
+
+    rollDice = () => {
+        let diceRolls = {};
+        DICE_COLORS.forEach(color => {
+            diceRolls[color] = Math.floor(Math.random() * 6) + 1;
+        });
+        this.setState({
+            diceRolls: diceRolls,
         });
     };
 
@@ -64,6 +86,8 @@ class App extends Component {
                                 addToGamecard={this.addToGamecard}
                                 lockRow={this.lockRow}
                                 diceRolls={this.state.diceRolls}
+                                failthrows={this.state.failthrows}
+                                acceptFailthrow={this.acceptFailthrow}
                     />
                     <DiceBoard
                         white1={this.state.diceRolls.WHITE1}
@@ -73,15 +97,9 @@ class App extends Component {
                         green={this.state.diceRolls.GREEN}
                         blue={this.state.diceRolls.BLUE}
                     />
-                    <Button onClick={()=>{
-                        let diceRolls = {};
-                        DICE_COLORS.forEach(color => {
-                            diceRolls[color] = Math.floor(Math.random() * 6) + 1;
-                        });
-                        this.setState({
-                            diceRolls: diceRolls,
-                        });
-                    }}>Roll Dice</Button>
+                    <Button onClick={this.rollDice}>
+                        Roll Dice
+                    </Button>
                 </div>
             </div>
         );
