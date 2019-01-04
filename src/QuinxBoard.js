@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-    calculateScore,
-    calculateTotalScore,
-    canLockRow,
-    generateNumbers,
-    generatePossibleEntries,
-    isReversed
-} from "./Quinx";
+import {calculateScore, calculateTotalScore, canLockRow, generateNumbers, isReversed} from "./Quinx";
 import {Button, Table} from 'react-bootstrap';
 import {QuinxField} from "./QuinxField";
 
@@ -61,20 +54,20 @@ const QuinxSheet = (props) => {
 
 const ScoreCard = (props) => {
     let scoreCard = ['RED', 'YELLOW', 'GREEN', 'BLUE'].map(color => {
-        return (<td key={color}>
+        return (<td key={color} style={{backgroundColor: color}}>
             <input value={calculateScore(props.gamecard[color].length)} size={3}
                    disabled={true}/>
         </td>);
     });
+    scoreCard.push(<td key={'emptycoloum2'}>From fail throws :</td>);
     scoreCard.push(<td key={'negativeScore'}>
         <input value={5 * props.failthrows * -1} size={3}
                disabled={true}/>
     </td>);
+    scoreCard.push(<td key={'emptycoloum1'}>Total score</td>);
     scoreCard.push(<td key={'totalscore'}>
         {calculateTotalScore(props.gamecard, props.failthrows)}
     </td>);
-    scoreCard.push(<td key={'emptycoloum1'}/>);
-    scoreCard.push(<td key={'emptycoloum2'}/>);
     scoreCard.push(<FailThrows key={'failthrows'}
                                acceptFailthrow={props.acceptFailthrow}
                                failthrows={props.failthrows}

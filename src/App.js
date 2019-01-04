@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import './App.css';
 import {QuinxBoard} from './QuinxBoard';
 import {DICE_COLORS, DiceBoard} from './DiceBoard';
-import {Button} from 'react-bootstrap';
+import {Button, Table} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
-import {generatePossibleEntries, isWhiteOnlyChoice} from "./Quinx";
+import {calculateScore, generatePossibleEntries, isWhiteOnlyChoice} from "./Quinx";
 
 const DICE_ROLL = 'DICE_ROLL';
 const ENTER_WHITE = 'ENTER_WHITE_OR_COLOR';
@@ -19,6 +19,25 @@ const GAME_PHASES = [
     WAIT_FOR_PLAYERS,
     PLAYER_WON,
 ];
+
+
+const ScoreLegend = () => {
+    return (
+        <Table striped bordered condensed hover>
+            <tbody>
+            <tr>
+                <td>Number of crosses:</td>
+                {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
+                    <td>{crosses}</td>)}
+            </tr>
+            <tr>
+                <td>Points for that row:</td>
+                {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
+                    <td>{calculateScore(crosses)}</td>)}
+            </tr>
+            </tbody>
+        </Table>);
+};
 
 class App extends Component {
     state = {
@@ -135,6 +154,12 @@ class App extends Component {
                         onClick={this.nextPlayer}>
                         Next Player
                     </Button>
+                    <Button
+                        disabled={this.state.phase !== DICE_ROLL}
+                        onClick={this.rollDice}>
+                        Roll Dice
+                    </Button>
+                    <ScoreLegend/>
                     <DiceBoard
                         white1={this.state.diceRolls.WHITE1}
                         white2={this.state.diceRolls.WHITE2}
@@ -143,11 +168,6 @@ class App extends Component {
                         green={this.state.diceRolls.GREEN}
                         blue={this.state.diceRolls.BLUE}
                     />
-                    <Button
-                        disabled={this.state.phase !== DICE_ROLL}
-                        onClick={this.rollDice}>
-                        Roll Dice
-                    </Button>
                     {this.state.allPlayer.map((playerId) => {
                             return (<QuinxBoard gamecard={this.state[playerId]}
                                                 addToGamecard={this.addToGamecard(playerId)}
