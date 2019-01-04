@@ -50,19 +50,43 @@ function isLocked(punchedInDigits) {
     return punchedInDigits.includes('locked');
 }
 
-export function generatePossibleEntries(diceRolls, gamecard) {
+export function generatePossibleEntries(diceRolls, gamecard, whiteOnlyEntered, notActivePlayer) {
     let possibleResult = {
         RED: [],
         YELLOW: [],
         GREEN: [],
         BLUE: [],
     };
-    let allPossibleColor = {
-        RED: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.RED, diceRolls.WHITE2 + diceRolls.RED],
-        YELLOW: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.YELLOW, diceRolls.WHITE2 + diceRolls.YELLOW],
-        BLUE: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.BLUE, diceRolls.WHITE2 + diceRolls.BLUE],
-        GREEN: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.GREEN, diceRolls.WHITE2 + diceRolls.GREEN],
-    };
+
+    let allPossibleColor = {};
+    if (whiteOnlyEntered) {
+        if (!notActivePlayer){
+            allPossibleColor = {
+                RED: [diceRolls.WHITE1 + diceRolls.RED, diceRolls.WHITE2 + diceRolls.RED],
+                YELLOW: [diceRolls.WHITE1 + diceRolls.YELLOW, diceRolls.WHITE2 + diceRolls.YELLOW],
+                BLUE: [diceRolls.WHITE1 + diceRolls.BLUE, diceRolls.WHITE2 + diceRolls.BLUE],
+                GREEN: [diceRolls.WHITE1 + diceRolls.GREEN, diceRolls.WHITE2 + diceRolls.GREEN],
+            };
+        }
+    } else {
+        if (notActivePlayer){
+            allPossibleColor = {
+                RED: [diceRolls.WHITE1 + diceRolls.WHITE2],
+                YELLOW: [diceRolls.WHITE1 + diceRolls.WHITE2],
+                BLUE: [diceRolls.WHITE1 + diceRolls.WHITE2],
+                GREEN: [diceRolls.WHITE1 + diceRolls.WHITE2],
+            };
+        }else{
+            allPossibleColor = {
+                RED: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.RED, diceRolls.WHITE2 + diceRolls.RED],
+                YELLOW: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.YELLOW, diceRolls.WHITE2 + diceRolls.YELLOW],
+                BLUE: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.BLUE, diceRolls.WHITE2 + diceRolls.BLUE],
+                GREEN: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.GREEN, diceRolls.WHITE2 + diceRolls.GREEN],
+            };
+        }
+    }
+
+
     const COLORS = ['RED', 'YELLOW', 'GREEN', 'BLUE'];
     COLORS.forEach((color) => {
         allPossibleColor[color].forEach(possibleDigit => {
@@ -76,4 +100,8 @@ export function generatePossibleEntries(diceRolls, gamecard) {
         });
     });
     return possibleResult;
+}
+
+export function isWhiteOnlyChoice(diceRolls, choice) {
+    return diceRolls.WHITE1 + diceRolls.WHITE2 === choice;
 }

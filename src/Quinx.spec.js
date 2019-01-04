@@ -1,4 +1,4 @@
-import {calculateScore, canLockRow, generateNumbers, generatePossibleEntries, isDisabled, isReversed} from './Quinx'
+import {calculateScore, canLockRow, generateNumbers, generatePossibleEntries, isDisabled, isReversed, isWhiteOnlyChoice} from './Quinx'
 
 describe('Quinxx', () => {
     describe('disables values that are not permitted', () => {
@@ -118,6 +118,65 @@ describe('Quinxx', () => {
                 BLUE: [5, 8, 9],
             };
             expect(generatePossibleEntries(diceRolls, gamecard)).toEqual(possibleEntries);
+        });
+
+        it('should not contain white only entries if white was already entered', () => {
+            let diceRolls = {
+                WHITE1: 2,
+                WHITE2: 3,
+                RED: 3,
+                YELLOW: 4,
+                GREEN: 5,
+                BLUE: 6,
+            };
+            let gamecard = {
+                RED: [],
+                BLUE: [],
+                YELLOW: [],
+                GREEN: [],
+                lockedRows: []
+            };
+            let possibleEntries = {
+                RED: [5, 6],
+                YELLOW: [6, 7],
+                GREEN: [7, 8],
+                BLUE: [8, 9],
+            };
+            expect(generatePossibleEntries(diceRolls, gamecard, true)).toEqual(possibleEntries);
+        });
+
+        it('should contain white only entries if not active player', () => {
+            let diceRolls = {
+                WHITE1: 2,
+                WHITE2: 3,
+                RED: 3,
+                YELLOW: 4,
+                GREEN: 5,
+                BLUE: 6,
+            };
+            let gamecard = {
+                RED: [],
+                BLUE: [],
+                YELLOW: [],
+                GREEN: [],
+                lockedRows: []
+            };
+            let possibleEntries = {
+                RED: [5],
+                YELLOW: [5],
+                GREEN: [5],
+                BLUE: [5],
+            };
+            expect(generatePossibleEntries(diceRolls, gamecard, false, true)).toEqual(possibleEntries);
+        });
+
+        it('should detect wether the chosen entry was a white one', () => {
+            let diceRolls = {
+                WHITE1: 2,
+                WHITE2: 3,
+            };
+            expect(isWhiteOnlyChoice(diceRolls, 5)).toEqual(true);
+            expect(isWhiteOnlyChoice(diceRolls, 6)).toEqual(false);
         });
     });
 });

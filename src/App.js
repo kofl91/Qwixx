@@ -4,24 +4,30 @@ import {QuinxBoard} from './QuinxBoard';
 import {DICE_COLORS, DiceBoard} from './DiceBoard';
 import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
+import {generatePossibleEntries, isWhiteOnlyChoice} from "./Quinx";
 
-// const DICE_ROLL = 'DICE_ROLL';
-// const ENTER_WHITE = 'ENTER_WHITE_OR_COLOR';
-// const ENTER_COLOR = 'ENTER_COLOR';
-// const WAIT_FOR_PLAYERS = 'WAIT_FOR_PLAYERS';
-// const PLAYER_WON = 'PLAYER_WON_OR_LOST';
-//
-// const GAME_PHASES = [
-//     DICE_ROLL,
-//     ENTER_WHITE,
-//     ENTER_COLOR,
-//     WAIT_FOR_PLAYERS,
-//     PLAYER_WON,
-// ];
+const DICE_ROLL = 'DICE_ROLL';
+const ENTER_WHITE = 'ENTER_WHITE_OR_COLOR';
+const ENTER_COLOR = 'ENTER_COLOR';
+const WAIT_FOR_PLAYERS = 'WAIT_FOR_PLAYERS';
+const PLAYER_WON = 'PLAYER_WON_OR_LOST';
+
+const GAME_PHASES = [
+    DICE_ROLL,
+    ENTER_WHITE,
+    ENTER_COLOR,
+    WAIT_FOR_PLAYERS,
+    PLAYER_WON,
+];
 
 class App extends Component {
     state = {
-        PLAYER1: {
+        allPlayer: ['IVET', 'KIM'],
+        phase: DICE_ROLL,
+        activePlayer: 'IVET',
+        IVET: {
+            enteredWhites: false,
+            enteredAll: false,
             RED: [],
             BLUE: [],
             YELLOW: [],
@@ -29,7 +35,9 @@ class App extends Component {
             failthrows: 0,
             lockedRows: [],
         },
-        PLAYER2: {
+        KIM: {
+            enteredWhites: false,
+            enteredAll: false,
             RED: [],
             BLUE: [],
             YELLOW: [],
@@ -49,8 +57,6 @@ class App extends Component {
     };
 
     acceptFailthrow = (playerId) => (event) => {
-        console.log(playerId);
-        console.log(event);
         let playerGamecard = this.state[playerId];
         playerGamecard.failthrows = playerGamecard.failthrows + 1;
         this.setState({
@@ -62,8 +68,29 @@ class App extends Component {
         let gamecard = this.state[playerId];
         gamecard[color].push(parseInt(digit));
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
+        if (isWhiteOnlyChoice(this.state.diceRolls, digit)) {
+            gamecard.enteredWhites = true;
+            if (this.state.activePlayer !== playerId){
+                gamecard.enteredAll = true;
+            }
+        } else {
+            gamecard.enteredAll = true;
+        }
         this.setState({
+            phase: WAIT_FOR_PLAYERS,
             [playerId]: gamecard
+        });
+    };
+
+    nextPlayer = () => {
+        this.state.allPlayer.map((player) => {
+            let playerToSet = this.state[player];
+            playerToSet.enteredWhites= false;
+            playerToSet.enteredAll = false;
+        });
+        this.setState({
+            phase: DICE_ROLL,
+            activePlayer: this.state.allPlayer[((this.state.allPlayer.indexOf(this.state.activePlayer) + 1) % this.state.allPlayer.length)]
         });
     };
 
@@ -73,6 +100,7 @@ class App extends Component {
             diceRolls[color] = Math.floor(Math.random() * 6) + 1;
         });
         this.setState({
+            phase: ENTER_WHITE,
             diceRolls: diceRolls,
         });
     };
@@ -94,14 +122,13 @@ class App extends Component {
                 <BootstrapStyled/>
                 <div>
                     <p>WELCOME TO QUINXX</p>
-                    <QuinxBoard gamecard={this.state['PLAYER1']}
-                                addToGamecard={this.addToGamecard('PLAYER1')}
-                                lockRow={this.lockRow('PLAYER1')}
-                                diceRolls={this.state.diceRolls}
-                                failthrows={this.state['PLAYER1'].failthrows}
-                                lockedRows={this.state.lockedRows}
-                                acceptFailthrow={this.acceptFailthrow('PLAYER1')}
-                    />
+                    <p>It is {this.state.activePlayer}'s turn</p>
+                    <p>The player is in phase {this.state.phase}</p>
+                    <Button
+                        disabled={this.state.phase !== WAIT_FOR_PLAYERS}
+                        onClick={this.nextPlayer}>
+                        Next Player
+                    </Button>
                     <DiceBoard
                         white1={this.state.diceRolls.WHITE1}
                         white2={this.state.diceRolls.WHITE2}
@@ -110,18 +137,36 @@ class App extends Component {
                         green={this.state.diceRolls.GREEN}
                         blue={this.state.diceRolls.BLUE}
                     />
-                    <Button onClick={this.rollDice}>
+                    <Button
+                        disabled={this.state.phase !== DICE_ROLL}
+                        onClick={this.rollDice}>
                         Roll Dice
                     </Button>
-
-                    <QuinxBoard gamecard={this.state['PLAYER2']}
-                                addToGamecard={this.addToGamecard('PLAYER2')}
-                                lockRow={this.lockRow('PLAYER2')}
-                                diceRolls={this.state.diceRolls}
-                                failthrows={this.state['PLAYER2'].failthrows}
-                                lockedRows={this.state.lockedRows}
-                                acceptFailthrow={this.acceptFailthrow('PLAYER2')}
-                    />
+                    {this.state.allPlayer.map((playerId) => {
+                            return (<QuinxBoard gamecard={this.state[playerId]}
+                                                addToGamecard={this.addToGamecard(playerId)}
+                                                lockRow={this.lockRow(playerId)}
+                                                diceRolls={this.state.diceRolls}
+                                                failthrows={this.state[playerId].failthrows}
+                                                lockedRows={this.state.lockedRows}
+                                                acceptFailthrow={this.acceptFailthrow(playerId)}
+                                                possibleEntries={ this.state[playerId].enteredAll ?
+                                                    {
+                                                        RED:[],
+                                                        YELLOW:[],
+                                                        BLUE:[],
+                                                        GREEN:[],
+                                                    } :
+                                                    generatePossibleEntries(
+                                                        this.state.diceRolls,
+                                                        this.state[playerId],
+                                                        this.state[playerId].enteredWhites,
+                                                        this.state.activePlayer !== playerId
+                                                    )
+                                                }
+                            />);
+                        }
+                    )}
                 </div>
             </div>
         );
