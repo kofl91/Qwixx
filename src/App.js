@@ -6,11 +6,11 @@ import {Button, Table} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
 import {calculateScore, generatePossibleEntries, isWhiteOnlyChoice} from "./Quinx";
 
-const DICE_ROLL = 'DICE_ROLL';
-const ENTER_WHITE = 'ENTER_WHITE_OR_COLOR';
-const ENTER_COLOR = 'ENTER_COLOR';
-const WAIT_FOR_PLAYERS = 'WAIT_FOR_PLAYERS';
-const PLAYER_WON = 'PLAYER_WON_OR_LOST';
+const DICE_ROLL = 'Roll the dice';
+const ENTER_WHITE = 'Make a cross. Use either both white dice or a white and a colored one. You can not enter a combination of only the white dices after using a colored one';
+const ENTER_COLOR = 'Make a cross. You already put in a white one. Now put in the colored one. (optional)';
+const WAIT_FOR_PLAYERS = 'We are waiting for other players to finish. Press next player when everyone set their marks or decided not to';
+const PLAYER_WON = 'A player has won. Check the scoreboard for the highest score.';
 
 const GAME_PHASES = [
     DICE_ROLL,
@@ -147,8 +147,8 @@ class App extends Component {
                 <BootstrapStyled/>
                 <div>
                     <p>WELCOME TO QUINXX</p>
-                    <p>It is {this.state.activePlayer}'s turn</p>
-                    <p>The player is in phase {this.state.phase}</p>
+                    <p>It is <b>{this.state.activePlayer}</b>'s turn</p>
+                    <p>Instructions: {this.state.phase}</p>
                     <Button
                         disabled={this.state.phase !== WAIT_FOR_PLAYERS}
                         onClick={this.nextPlayer}>
@@ -169,7 +169,8 @@ class App extends Component {
                         blue={this.state.diceRolls.BLUE}
                     />
                     {this.state.allPlayer.map((playerId) => {
-                            return (<QuinxBoard gamecard={this.state[playerId]}
+                            return (<QuinxBoard playerId={playerId}
+                                                gamecard={this.state[playerId]}
                                                 addToGamecard={this.addToGamecard(playerId)}
                                                 lockRow={this.lockRow(playerId)}
                                                 diceRolls={this.state.diceRolls}

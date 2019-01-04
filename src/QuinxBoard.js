@@ -76,10 +76,11 @@ const ScoreCard = (props) => {
     return (scoreCard);
 };
 
-export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow, lockedRows, possibleEntries}) => {
+export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow, lockedRows, possibleEntries, playerId}) => {
     return (
         <Table striped bordered condensed hover>
             <tbody>
+            <tr><b>{playerId}</b></tr>
             <QuinxSheet
                 gamecard={gamecard}
                 lockedRows={lockedRows}
