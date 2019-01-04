@@ -60,6 +60,7 @@ class App extends Component {
         let playerGamecard = this.state[playerId];
         playerGamecard.failthrows = playerGamecard.failthrows + 1;
         this.setState({
+            phase: WAIT_FOR_PLAYERS,
             [playerId]: playerGamecard
         });
     };
@@ -70,28 +71,33 @@ class App extends Component {
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
         if (isWhiteOnlyChoice(this.state.diceRolls, digit)) {
             gamecard.enteredWhites = true;
-            if (this.state.activePlayer !== playerId){
+            if (this.state.activePlayer !== playerId) {
                 gamecard.enteredAll = true;
             }
         } else {
             gamecard.enteredAll = true;
         }
         this.setState({
-            phase: WAIT_FOR_PLAYERS,
             [playerId]: gamecard
         });
+        if (playerId === this.state.activePlayer) {
+            this.setState({
+                phase: WAIT_FOR_PLAYERS,
+            });
+        }
     };
 
     nextPlayer = () => {
         this.state.allPlayer.map((player) => {
             let playerToSet = this.state[player];
-            playerToSet.enteredWhites= false;
+            playerToSet.enteredWhites = false;
             playerToSet.enteredAll = false;
         });
         this.setState({
             phase: DICE_ROLL,
             activePlayer: this.state.allPlayer[((this.state.allPlayer.indexOf(this.state.activePlayer) + 1) % this.state.allPlayer.length)]
         });
+        this.rollDice();
     };
 
     rollDice = () => {
@@ -150,12 +156,12 @@ class App extends Component {
                                                 failthrows={this.state[playerId].failthrows}
                                                 lockedRows={this.state.lockedRows}
                                                 acceptFailthrow={this.acceptFailthrow(playerId)}
-                                                possibleEntries={ this.state[playerId].enteredAll ?
+                                                possibleEntries={this.state[playerId].enteredAll ?
                                                     {
-                                                        RED:[],
-                                                        YELLOW:[],
-                                                        BLUE:[],
-                                                        GREEN:[],
+                                                        RED: [],
+                                                        YELLOW: [],
+                                                        BLUE: [],
+                                                        GREEN: [],
                                                     } :
                                                     generatePossibleEntries(
                                                         this.state.diceRolls,
