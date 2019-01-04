@@ -52,7 +52,7 @@ class App extends Component {
             YELLOW: [],
             GREEN: [],
             failthrows: 0,
-            lockedRows: [],
+            lockedRowsCounter: 0,
         },
         KIM: {
             enteredWhites: false,
@@ -62,7 +62,7 @@ class App extends Component {
             YELLOW: [],
             GREEN: [],
             failthrows: 0,
-            lockedRows: [],
+            lockedRowsCounter: 0,
         },
         lockedRows: [],
         diceRolls: {
@@ -82,6 +82,11 @@ class App extends Component {
             phase: WAIT_FOR_PLAYERS,
             [playerId]: playerGamecard
         });
+        if (playerGamecard.failthrows === 4){
+            this.setState({
+                phase: PLAYER_WON,
+            });
+        }
     };
 
     addToGamecard = (playerId) => (digit, color) => (event) => {
@@ -135,10 +140,16 @@ class App extends Component {
         lockedRows.push(color);
         let gamecard = this.state[playerId];
         gamecard[color].push('LOCKED');
+        gamecard.lockedRowsCounter = gamecard.lockedRowsCounter + 1;
         this.setState({
             [playerId]: gamecard,
             lockedRows
         });
+        if (gamecard.lockedRowsCounter){
+            this.setState({
+                phase: PLAYER_WON
+            });
+        }
     };
 
     render() {

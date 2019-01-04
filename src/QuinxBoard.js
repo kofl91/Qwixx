@@ -6,7 +6,7 @@ import {QuinxField} from "./QuinxField";
 const FailThrow = (props) => {
     return (<Button
         onClick={props.onClick}
-        disabled={props.failthrows > props.index}>
+        disabled={props.failthrows !== props.index}>
         {props.failthrows > props.index ? 'X' : 'O'}
     </Button>);
 };
