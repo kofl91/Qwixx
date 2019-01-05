@@ -145,7 +145,7 @@ class App extends Component {
             [playerId]: gamecard,
             lockedRows
         });
-        if (gamecard.lockedRowsCounter){
+        if (gamecard.lockedRowsCounter === 2){
             this.setState({
                 phase: PLAYER_WON
             });
