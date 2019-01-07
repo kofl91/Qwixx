@@ -80,7 +80,7 @@ export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamec
     return (
         <Table striped bordered condensed hover>
             <tbody>
-            <tr><b>{playerId}</b></tr>
+            <tr><td><b>{playerId}</b></td></tr>
             <QuinxSheet
                 gamecard={gamecard}
                 lockedRows={lockedRows}

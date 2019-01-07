@@ -28,12 +28,12 @@ const ScoreLegend = () => {
             <tr>
                 <td>Number of crosses:</td>
                 {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
-                    <td>{crosses}</td>)}
+                    <td key={crosses}>{crosses}</td>)}
             </tr>
             <tr>
                 <td>Points for that row:</td>
                 {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
-                    <td>{calculateScore(crosses)}</td>)}
+                    <td key={crosses + 'score'}>{calculateScore(crosses)}</td>)}
             </tr>
             </tbody>
         </Table>);
@@ -82,7 +82,7 @@ class App extends Component {
             phase: WAIT_FOR_PLAYERS,
             [playerId]: playerGamecard
         });
-        if (playerGamecard.failthrows === 4){
+        if (playerGamecard.failthrows === 4) {
             this.setState({
                 phase: PLAYER_WON,
             });
@@ -145,7 +145,7 @@ class App extends Component {
             [playerId]: gamecard,
             lockedRows
         });
-        if (gamecard.lockedRowsCounter === 2){
+        if (gamecard.lockedRowsCounter === 2) {
             this.setState({
                 phase: PLAYER_WON
             });
@@ -180,7 +180,8 @@ class App extends Component {
                         blue={this.state.diceRolls.BLUE}
                     />
                     {this.state.allPlayer.map((playerId) => {
-                            return (<QuinxBoard playerId={playerId}
+                            return (<QuinxBoard key={playerId}
+                                                playerId={playerId}
                                                 gamecard={this.state[playerId]}
                                                 addToGamecard={this.addToGamecard(playerId)}
                                                 lockRow={this.lockRow(playerId)}
