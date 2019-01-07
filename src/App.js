@@ -5,22 +5,8 @@ import {QuinxBoard} from './Game/QuinxBoard';
 import {DICE_COLORS, DiceBoard} from './Game/DiceBoard';
 import {Button, Table} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
-import {calculateScore, generatePossibleEntries, isWhiteOnlyChoice} from "./Game/Quinx";
+import * as QwixxGame from "./Game/Quinx";
 import {rollDiceAction} from "./reduxStuff";
-
-const DICE_ROLL = 'Roll the dice';
-const ENTER_WHITE = 'Make a cross. Use either both white dice or a white and a colored one. You can not enter a combination of only the white dices after using a colored one';
-const ENTER_COLOR = 'Make a cross. You already put in a white one. Now put in the colored one. (optional)';
-const WAIT_FOR_PLAYERS = 'We are waiting for other players to finish. Press next player when everyone set their marks or decided not to';
-const PLAYER_WON = 'A player has won. Check the scoreboard for the highest score.';
-
-const GAME_PHASES = [
-    DICE_ROLL,
-    ENTER_WHITE,
-    ENTER_COLOR,
-    WAIT_FOR_PLAYERS,
-    PLAYER_WON,
-];
 
 
 const ScoreLegend = () => {
@@ -35,7 +21,7 @@ const ScoreLegend = () => {
             <tr>
                 <td>Points for that row:</td>
                 {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
-                    <td key={crosses + 'score'}>{calculateScore(crosses)}</td>)}
+                    <td key={crosses + 'score'}>{QwixxGame.calculateScore(crosses)}</td>)}
             </tr>
             </tbody>
         </Table>);
@@ -44,7 +30,7 @@ const ScoreLegend = () => {
 class App extends Component {
     state = {
         allPlayer: ['IVET', 'KIM'],
-        phase: DICE_ROLL,
+        phase: QwixxGame.DICE_ROLL,
         activePlayer: 'IVET',
         IVET: {
             enteredWhites: false,
@@ -81,12 +67,12 @@ class App extends Component {
         let playerGamecard = this.state[playerId];
         playerGamecard.failthrows = playerGamecard.failthrows + 1;
         this.setState({
-            phase: WAIT_FOR_PLAYERS,
+            phase: QwixxGame.WAIT_FOR_PLAYERS,
             [playerId]: playerGamecard
         });
         if (playerGamecard.failthrows === 4) {
             this.setState({
-                phase: PLAYER_WON,
+                phase: QwixxGame.PLAYER_WON,
             });
         }
     };
@@ -95,7 +81,7 @@ class App extends Component {
         let gamecard = this.state[playerId];
         gamecard[color].push(parseInt(digit));
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
-        if (isWhiteOnlyChoice(this.state.diceRolls, digit)) {
+        if (QwixxGame.isWhiteOnlyChoice(this.state.diceRolls, digit)) {
             gamecard.enteredWhites = true;
             if (this.state.activePlayer !== playerId) {
                 gamecard.enteredAll = true;
@@ -108,7 +94,7 @@ class App extends Component {
         });
         if (playerId === this.state.activePlayer) {
             this.setState({
-                phase: WAIT_FOR_PLAYERS,
+                phase: QwixxGame.WAIT_FOR_PLAYERS,
             });
         }
     };
@@ -120,7 +106,7 @@ class App extends Component {
             playerToSet.enteredAll = false;
         });
         this.setState({
-            phase: DICE_ROLL,
+            phase: QwixxGame.DICE_ROLL,
             activePlayer: this.state.allPlayer[((this.state.allPlayer.indexOf(this.state.activePlayer) + 1) % this.state.allPlayer.length)]
         });
         this.rollDice();
@@ -132,7 +118,7 @@ class App extends Component {
             diceRolls[color] = Math.floor(Math.random() * 6) + 1;
         });
         this.setState({
-            phase: ENTER_WHITE,
+            phase: QwixxGame.ENTER_WHITE,
             diceRolls: diceRolls,
         });
     };
@@ -149,7 +135,7 @@ class App extends Component {
         });
         if (gamecard.lockedRowsCounter === 2) {
             this.setState({
-                phase: PLAYER_WON
+                phase: QwixxGame.PLAYER_WON
             });
         }
     };
@@ -163,12 +149,12 @@ class App extends Component {
                     <p>It is <b>{this.state.activePlayer}</b>'s turn</p>
                     <p>Instructions: {this.state.phase}</p>
                     <Button
-                        disabled={this.state.phase !== WAIT_FOR_PLAYERS}
+                        disabled={this.state.phase !== QwixxGame.WAIT_FOR_PLAYERS}
                         onClick={this.nextPlayer}>
                         Next Player
                     </Button>
                     <Button
-                        disabled={this.state.phase !== DICE_ROLL}
+                        disabled={this.state.phase !== QwixxGame.DICE_ROLL}
                         onClick={this.rollDice}>
                         Roll Dice
                     </Button>
@@ -198,7 +184,7 @@ class App extends Component {
                                                         BLUE: [],
                                                         GREEN: [],
                                                     } :
-                                                    generatePossibleEntries(
+                                                    QwixxGame.generatePossibleEntries(
                                                         this.state.diceRolls,
                                                         this.state[playerId],
                                                         this.state[playerId].enteredWhites,

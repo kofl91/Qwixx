@@ -1,3 +1,9 @@
+export const DICE_ROLL = 'Roll the dice';
+export const ENTER_WHITE = 'Make a cross. Use either both white dice or a white and a colored one. You can not enter a combination of only the white dices after using a colored one';
+export const ENTER_COLOR = 'Make a cross. You already put in a white one. Now put in the colored one. (optional)';
+export const WAIT_FOR_PLAYERS = 'We are waiting for other players to finish. Press next player when everyone set their marks or decided not to';
+export const PLAYER_WON = 'A player has won. Check the scoreboard for the highest score.';
+
 export function isDisabled(punchedInDigits, askedDigit, reversed, locked) {
     if (reversed) {
         return (punchedInDigits[0] <= askedDigit) || locked === true;
