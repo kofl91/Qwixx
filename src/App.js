@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import './App.css';
-import { connect } from 'react-redux'
+import {connect} from 'react-redux'
 import {QuinxBoard} from './Game/QuinxBoard';
-import {DICE_COLORS, DiceBoard} from './Game/DiceBoard';
+import DiceBoard from './Game/DiceBoard';
 import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
 import * as QwixxGame from "./Game/Quinx";
@@ -88,13 +88,8 @@ class App extends Component {
 
     rollDice = () => {
         this.props.dispatch(rollDiceAction());
-        let diceRolls = {};
-        DICE_COLORS.forEach(color => {
-            diceRolls[color] = Math.floor(Math.random() * 6) + 1;
-        });
         this.setState({
             phase: QwixxGame.ENTER_WHITE,
-            diceRolls: diceRolls,
         });
     };
 
@@ -134,14 +129,7 @@ class App extends Component {
                         Roll Dice
                     </Button>
                     <ScoreLegend/>
-                    <DiceBoard
-                        white1={this.props.diceRolls.WHITE1}
-                        white2={this.props.diceRolls.WHITE2}
-                        red={this.props.diceRolls.RED}
-                        yellow={this.props.diceRolls.YELLOW}
-                        green={this.props.diceRolls.GREEN}
-                        blue={this.props.diceRolls.BLUE}
-                    />
+                    <DiceBoard/>
                     {this.state.allPlayer.map((playerId) => {
                             return (<QuinxBoard key={playerId}
                                                 playerId={playerId}

@@ -16,7 +16,7 @@ const playerDefault = {
     lockedRowsCounter: 0,
 };
 
-let diceDefault = {
+export const diceDefault = {
     WHITE1: 0,
     WHITE2: 0,
     RED: 0,
