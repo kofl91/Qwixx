@@ -3,29 +3,10 @@ import './App.css';
 import { connect } from 'react-redux'
 import {QuinxBoard} from './Game/QuinxBoard';
 import {DICE_COLORS, DiceBoard} from './Game/DiceBoard';
-import {Button, Table} from 'react-bootstrap';
+import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
 import * as QwixxGame from "./Game/Quinx";
-import {rollDiceAction} from "./reduxStuff";
-
-
-const ScoreLegend = () => {
-    return (
-        <Table striped bordered condensed hover>
-            <tbody>
-            <tr>
-                <td>Number of crosses:</td>
-                {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
-                    <td key={crosses}>{crosses}</td>)}
-            </tr>
-            <tr>
-                <td>Points for that row:</td>
-                {[...Array(12).keys()].map(digit => digit + 1).map((crosses) =>
-                    <td key={crosses + 'score'}>{QwixxGame.calculateScore(crosses)}</td>)}
-            </tr>
-            </tbody>
-        </Table>);
-};
+import {ScoreLegend} from "./Game/ScoreLegend";
 
 class App extends Component {
     state = {
