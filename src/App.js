@@ -109,6 +109,21 @@ class App extends Component {
             });
         }
     };
+    getPossibleEntries(playerId) {
+        return this.state[playerId].enteredAll ?
+            {
+                RED: [],
+                YELLOW: [],
+                BLUE: [],
+                GREEN: [],
+            } :
+            QwixxGame.generatePossibleEntries(
+                this.props.diceRolls,
+                this.state[playerId],
+                this.state[playerId].enteredWhites,
+                this.state.activePlayer !== playerId
+            );
+    }
 
     render() {
         return (
@@ -136,24 +151,10 @@ class App extends Component {
                                                 gamecard={this.state[playerId]}
                                                 addToGamecard={this.addToGamecard(playerId)}
                                                 lockRow={this.lockRow(playerId)}
-                                                diceRolls={this.props.diceRolls}
                                                 failthrows={this.state[playerId].failthrows}
                                                 lockedRows={this.state.lockedRows}
                                                 acceptFailthrow={this.acceptFailthrow(playerId)}
-                                                possibleEntries={this.state[playerId].enteredAll ?
-                                                    {
-                                                        RED: [],
-                                                        YELLOW: [],
-                                                        BLUE: [],
-                                                        GREEN: [],
-                                                    } :
-                                                    QwixxGame.generatePossibleEntries(
-                                                        this.props.diceRolls,
-                                                        this.state[playerId],
-                                                        this.state[playerId].enteredWhites,
-                                                        this.state.activePlayer !== playerId
-                                                    )
-                                                }
+                                                possibleEntries={this.getPossibleEntries(playerId)}
                             />);
                         }
                     )}

@@ -3,6 +3,7 @@ import {calculateScore, calculateTotalScore, canLockRow, generateNumbers, isReve
 import {Button, Table} from 'react-bootstrap';
 import {QuinxField} from "./QuinxField";
 
+
 const FailThrow = (props) => {
     return (<Button
         onClick={props.onClick}
@@ -76,11 +77,13 @@ const ScoreCard = (props) => {
     return (scoreCard);
 };
 
-export const QuinxBoard = ({gamecard, failthrows, diceRolls, lockRow, addToGamecard, acceptFailthrow, lockedRows, possibleEntries, playerId}) => {
+export const QuinxBoard = ({gamecard, failthrows, lockRow, addToGamecard, acceptFailthrow, lockedRows, possibleEntries, playerId}) => {
     return (
         <Table striped bordered condensed hover>
             <tbody>
-            <tr><td><b>{playerId}</b></td></tr>
+            <tr>
+                <td><b>{playerId}</b></td>
+            </tr>
             <QuinxSheet
                 gamecard={gamecard}
                 lockedRows={lockedRows}
