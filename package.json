@@ -2,7 +2,7 @@
   "name": "quinxx",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://18.206.123.221:3000/",
+  "homepage": "http://18.206.123.221:3000/",
   "dependencies": {
     "@babel/core": "7.1.6",
     "@svgr/webpack": "2.4.1",
@@ -46,6 +46,8 @@
     "react-bootstrap": "^0.32.4",
     "react-dev-utils": "^7.0.0",
     "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1",
     "resolve": "1.8.1",
     "sass-loader": "7.1.0",
     "style-loader": "0.23.0",

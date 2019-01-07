@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import './App.css';
-import {QuinxBoard} from './QuinxBoard';
-import {DICE_COLORS, DiceBoard} from './DiceBoard';
+import { connect } from 'react-redux'
+import {QuinxBoard} from './Game/QuinxBoard';
+import {DICE_COLORS, DiceBoard} from './Game/DiceBoard';
 import {Button, Table} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
-import {calculateScore, generatePossibleEntries, isWhiteOnlyChoice} from "./Quinx";
+import {calculateScore, generatePossibleEntries, isWhiteOnlyChoice} from "./Game/Quinx";
+import {rollDiceAction} from "./reduxStuff";
 
 const DICE_ROLL = 'Roll the dice';
 const ENTER_WHITE = 'Make a cross. Use either both white dice or a white and a colored one. You can not enter a combination of only the white dices after using a colored one';
@@ -212,4 +214,4 @@ class App extends Component {
     }
 }
 
-export default App;
+export default connect()(App);
