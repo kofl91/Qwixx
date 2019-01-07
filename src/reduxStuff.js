@@ -41,7 +41,7 @@ const qwixx = (state = defaultState, action) => {
         case 'ADD_TODO':
             return {
                 phase: 'ENTER_WHITE',
-                dices: rollDice(),
+                diceRolls: rollDice(),
             };
         default:
             return state;

@@ -7,6 +7,7 @@ import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
 import * as QwixxGame from "./Game/Quinx";
 import {ScoreLegend} from "./Game/ScoreLegend";
+import {rollDiceAction} from "./reduxStuff";
 
 class App extends Component {
     state = {
@@ -34,14 +35,6 @@ class App extends Component {
             lockedRowsCounter: 0,
         },
         lockedRows: [],
-        diceRolls: {
-            WHITE1: 0,
-            WHITE2: 0,
-            RED: 0,
-            YELLOW: 0,
-            GREEN: 0,
-            BLUE: 0,
-        },
     };
 
     acceptFailthrow = (playerId) => (event) => {
@@ -62,7 +55,7 @@ class App extends Component {
         let gamecard = this.state[playerId];
         gamecard[color].push(parseInt(digit));
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
-        if (QwixxGame.isWhiteOnlyChoice(this.state.diceRolls, digit)) {
+        if (QwixxGame.isWhiteOnlyChoice(this.props.diceRolls, digit)) {
             gamecard.enteredWhites = true;
             if (this.state.activePlayer !== playerId) {
                 gamecard.enteredAll = true;
@@ -94,6 +87,7 @@ class App extends Component {
     };
 
     rollDice = () => {
+        this.props.dispatch(rollDiceAction());
         let diceRolls = {};
         DICE_COLORS.forEach(color => {
             diceRolls[color] = Math.floor(Math.random() * 6) + 1;
@@ -141,12 +135,12 @@ class App extends Component {
                     </Button>
                     <ScoreLegend/>
                     <DiceBoard
-                        white1={this.state.diceRolls.WHITE1}
-                        white2={this.state.diceRolls.WHITE2}
-                        red={this.state.diceRolls.RED}
-                        yellow={this.state.diceRolls.YELLOW}
-                        green={this.state.diceRolls.GREEN}
-                        blue={this.state.diceRolls.BLUE}
+                        white1={this.props.diceRolls.WHITE1}
+                        white2={this.props.diceRolls.WHITE2}
+                        red={this.props.diceRolls.RED}
+                        yellow={this.props.diceRolls.YELLOW}
+                        green={this.props.diceRolls.GREEN}
+                        blue={this.props.diceRolls.BLUE}
                     />
                     {this.state.allPlayer.map((playerId) => {
                             return (<QuinxBoard key={playerId}
@@ -154,7 +148,7 @@ class App extends Component {
                                                 gamecard={this.state[playerId]}
                                                 addToGamecard={this.addToGamecard(playerId)}
                                                 lockRow={this.lockRow(playerId)}
-                                                diceRolls={this.state.diceRolls}
+                                                diceRolls={this.props.diceRolls}
                                                 failthrows={this.state[playerId].failthrows}
                                                 lockedRows={this.state.lockedRows}
                                                 acceptFailthrow={this.acceptFailthrow(playerId)}
@@ -166,7 +160,7 @@ class App extends Component {
                                                         GREEN: [],
                                                     } :
                                                     QwixxGame.generatePossibleEntries(
-                                                        this.state.diceRolls,
+                                                        this.props.diceRolls,
                                                         this.state[playerId],
                                                         this.state[playerId].enteredWhites,
                                                         this.state.activePlayer !== playerId
@@ -181,4 +175,8 @@ class App extends Component {
     }
 }
 
-export default connect()(App);
+const mapStateToProps = (state) => {
+    return state;
+};
+
+export default connect(mapStateToProps)(App);
