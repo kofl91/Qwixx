@@ -7,9 +7,9 @@ import {Button} from 'react-bootstrap';
 import {BootstrapStyled} from "./BootstrapStyled";
 import * as QwixxGame from "./Game/Quinx";
 import {ScoreLegend} from "./Game/ScoreLegend";
-import {rollDiceAction} from "./reduxStuff";
+import {rollDiceAction,addToGamecardAction} from "./reduxStuff";
 
-class App extends Component {
+export class App extends Component {
     state = {
         allPlayer: ['IVET', 'KIM'],
         phase: QwixxGame.DICE_ROLL,
@@ -52,6 +52,7 @@ class App extends Component {
     };
 
     addToGamecard = (playerId) => (digit, color) => (event) => {
+        this.props.dispatch(addToGamecardAction(playerId,digit,color));
         let gamecard = this.state[playerId];
         gamecard[color].push(parseInt(digit));
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
@@ -164,7 +165,7 @@ class App extends Component {
     }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state = {}) => {
     return state;
 };
 

@@ -5,7 +5,6 @@ import {diceDefault} from "../reduxStuff";
 export const DICE_COLORS = ['WHITE1', 'WHITE2', 'RED', 'YELLOW', 'GREEN', 'BLUE'];
 
 export const DiceBoard = (props) => {
-    console.log(props);
     return (<div>
         <button disabled style={{backgroundColor: 'WHITE'}}>{props.WHITE1}</button>
         <button disabled style={{backgroundColor: 'WHITE'}}>{props.WHITE2}</button>
