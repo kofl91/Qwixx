@@ -5,6 +5,13 @@ export const rollDiceAction = () => ({
     type: 'ADD_TODO'
 });
 
+export const addToGamecardAction = (player,digit,color) => ({
+    type: 'ADD_TO_GAMECARD',
+    player,
+    digit,
+    color
+});
+
 const playerDefault = {
     enteredWhites: false,
     enteredAll: false,
@@ -34,18 +41,44 @@ const defaultState = {
     lockedRows: [],
 };
 
+
+
 const qwixx = (state = defaultState, action) => {
-    console.log(state);
-    console.log(action);
     switch (action.type) {
         case 'ADD_TODO':
             return {
+                ...state,
                 phase: 'ENTER_WHITE',
                 diceRolls: rollDice(),
+            };
+        case 'ADD_TO_GAMECARD':
+            let phase = state.phase;
+            if (action.player === state.activePlayer) {
+                phase = QwixxGame.WAIT_FOR_PLAYERS;
+            }
+            return {
+                ...state,
+                [action.player]: addToGameCard(state, action.player, action.digit, action.color),
+                phase
             };
         default:
             return state;
     }
+};
+
+const addToGameCard = (state, player, digit, color) => {
+    let gamecard = state[player];
+    gamecard[color].push(parseInt(digit));
+    gamecard[color] = gamecard[color].sort((a, b) => a - b);
+    if (QwixxGame.isWhiteOnlyChoice(state.diceRolls, digit)) {
+        gamecard.enteredWhites = true;
+        if (state.activePlayer !== player) {
+            gamecard.enteredAll = true;
+        }
+    } else {
+        gamecard.enteredAll = true;
+    }
+    return gamecard;
 };
 
 const rollDice = () => {
