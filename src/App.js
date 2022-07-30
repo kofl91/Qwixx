@@ -1,13 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './App.css';
-import {connect} from 'react-redux'
-import {QuinxBoard} from './Game/QuinxBoard';
+import { connect } from 'react-redux'
+import { QuinxBoard } from './Game/QuinxBoard';
 import DiceBoard from './Game/DiceBoard';
-import {Button} from 'react-bootstrap';
-import {BootstrapStyled} from "./BootstrapStyled";
+import { Button } from 'react-bootstrap';
+import { BootstrapStyled } from "./BootstrapStyled";
 import * as QwixxGame from "./Game/Quinx";
-import {ScoreLegend} from "./Game/ScoreLegend";
-import {rollDiceAction,addToGamecardAction} from "./reduxStuff";
+import { ScoreLegend } from "./Game/ScoreLegend";
+import { rollDiceAction, addToGamecardAction } from "./reduxStuff";
 
 export class App extends Component {
     state = {
@@ -52,7 +52,7 @@ export class App extends Component {
     };
 
     addToGamecard = (playerId) => (digit, color) => (event) => {
-        this.props.dispatch(addToGamecardAction(playerId,digit,color));
+        this.props.dispatch(addToGamecardAction(playerId, digit, color));
         let gamecard = this.state[playerId];
         gamecard[color].push(parseInt(digit));
         gamecard[color] = gamecard[color].sort((a, b) => a - b);
@@ -79,6 +79,7 @@ export class App extends Component {
             let playerToSet = this.state[player];
             playerToSet.enteredWhites = false;
             playerToSet.enteredAll = false;
+            return playerToSet
         });
         this.setState({
             phase: QwixxGame.DICE_ROLL,
@@ -129,7 +130,7 @@ export class App extends Component {
     render() {
         return (
             <div className="App">
-                <BootstrapStyled/>
+                <BootstrapStyled />
                 <div>
                     <p>WELCOME TO QUINXX</p>
                     <p>It is <b>{this.state.activePlayer}</b>'s turn</p>
@@ -144,20 +145,20 @@ export class App extends Component {
                         onClick={this.rollDice}>
                         Roll Dice
                     </Button>
-                    <ScoreLegend/>
-                    <DiceBoard/>
+                    <ScoreLegend />
+                    <DiceBoard />
                     {this.state.allPlayer.map((playerId) => {
-                            return (<QuinxBoard key={playerId}
-                                                playerId={playerId}
-                                                gamecard={this.state[playerId]}
-                                                addToGamecard={this.addToGamecard(playerId)}
-                                                lockRow={this.lockRow(playerId)}
-                                                failthrows={this.state[playerId].failthrows}
-                                                lockedRows={this.state.lockedRows}
-                                                acceptFailthrow={this.acceptFailthrow(playerId)}
-                                                possibleEntries={this.getPossibleEntries(playerId)}
-                            />);
-                        }
+                        return (<QuinxBoard key={playerId}
+                            playerId={playerId}
+                            gamecard={this.state[playerId]}
+                            addToGamecard={this.addToGamecard(playerId)}
+                            lockRow={this.lockRow(playerId)}
+                            failthrows={this.state[playerId].failthrows}
+                            lockedRows={this.state.lockedRows}
+                            acceptFailthrow={this.acceptFailthrow(playerId)}
+                            possibleEntries={this.getPossibleEntries(playerId)}
+                        />);
+                    }
                     )}
                 </div>
             </div>

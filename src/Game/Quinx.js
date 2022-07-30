@@ -34,10 +34,9 @@ export function calculateScore(numberOfCrosses) {
 export function canLockRow(gamecard, color, lockedRows) {
     const row = gamecard[color];
     const length = row.length;
-    return length >= 5 &&
-        !lockedRows.includes(color) &&
-        (row.includes(12) && (color === 'RED' || color === 'YELLOW') ||
-            row.includes(2) && (color === 'BLUE' || color === 'GREEN'));
+
+    // eslint-disable-next-line no-mixed-operators
+    return length >= 5 && !lockedRows.includes(color) && (row.includes(12) && (color === 'RED' || color === 'YELLOW') || row.includes(2) && (color === 'BLUE' || color === 'GREEN'));
 }
 
 export function calculateTotalScore(gamecard, failthrows) {
@@ -66,7 +65,7 @@ export function generatePossibleEntries(diceRolls, gamecard, whiteOnlyEntered, n
 
     let allPossibleColor = {};
     if (whiteOnlyEntered) {
-        if (!notActivePlayer){
+        if (!notActivePlayer) {
             allPossibleColor = {
                 RED: [diceRolls.WHITE1 + diceRolls.RED, diceRolls.WHITE2 + diceRolls.RED],
                 YELLOW: [diceRolls.WHITE1 + diceRolls.YELLOW, diceRolls.WHITE2 + diceRolls.YELLOW],
@@ -75,14 +74,14 @@ export function generatePossibleEntries(diceRolls, gamecard, whiteOnlyEntered, n
             };
         }
     } else {
-        if (notActivePlayer){
+        if (notActivePlayer) {
             allPossibleColor = {
                 RED: [diceRolls.WHITE1 + diceRolls.WHITE2],
                 YELLOW: [diceRolls.WHITE1 + diceRolls.WHITE2],
                 BLUE: [diceRolls.WHITE1 + diceRolls.WHITE2],
                 GREEN: [diceRolls.WHITE1 + diceRolls.WHITE2],
             };
-        }else{
+        } else {
             allPossibleColor = {
                 RED: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.RED, diceRolls.WHITE2 + diceRolls.RED],
                 YELLOW: [diceRolls.WHITE1 + diceRolls.WHITE2, diceRolls.WHITE1 + diceRolls.YELLOW, diceRolls.WHITE2 + diceRolls.YELLOW],
